@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz to Earn - Rewards Edition</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>🧠 Quiz to Earn</h1>
+    <div id="quiz-box">
+      <p id="question">Loading question...</p>
+      <div id="answers"></div>
+      <button id="nextBtn" disabled>Next</button>
+    </div>
+    <div id="result" style="display:none;">
+      <h2>🎉 Quiz Complete!</h2>
+      <p>Your score: <span id="score"></span></p>
+      <p>Total coins: <span id="coins"></span></p>
+      <p id="bonus" style="font-weight: bold;"></p>
+      <button onclick="restartQuiz()">Try Again</button>
+    </div>
+    <div class="ads">
+      <p>📢 Ad will appear here (insert AdSense code later)</p>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
