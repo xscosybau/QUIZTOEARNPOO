@@ -1,0 +1,94 @@
+const questions = [
+  { q: "What is the capital of the Philippines?", a: ["Cebu", "Davao", "Manila", "Baguio"], c: 2 },
+  { q: "Which planet is known as the Red Planet?", a: ["Earth", "Venus", "Mars", "Saturn"], c: 2 },
+  { q: "How many legs does a spider have?", a: ["6", "8", "10", "12"], c: 1 },
+  { q: "What is 5 + 3 * 2?", a: ["11", "16", "13", "10"], c: 2 },
+  { q: "Who wrote 'Noli Me Tangere'?", a: ["Bonifacio", "Luna", "Mabini", "Rizal"], c: 3 },
+  { q: "Anong kulay ang sumisimbolo ng kapayapaan?", a: ["Pula", "Putî", "Berde", "Dilaw"], c: 1 },
+  { q: "How many hours are there in 2 days?", a: ["24", "36", "48", "72"], c: 2 },
+  { q: "Which gas do plants absorb?", a: ["Oxygen", "Carbon Dioxide", "Nitrogen", "Hydrogen"], c: 1 },
+  { q: "What shape has 3 sides?", a: ["Square", "Circle", "Triangle", "Hexagon"], c: 2 },
+  { q: "National Hero of the Philippines?", a: ["Aguinaldo", "Bonifacio", "Luna", "Rizal"], c: 3 },
+  { q: "What fruit is known as the king of fruits?", a: ["Banana", "Mango", "Durian", "Apple"], c: 2 },
+  { q: "Saan ginagamit ang barometer?", a: ["Lupa", "Ulan", "Presyon ng Hangin", "Init"], c: 2 },
+  { q: "First color in the rainbow?", a: ["Red", "Orange", "Violet", "Green"], c: 0 },
+  { q: "What is H2O?", a: ["Salt", "Hydrogen", "Water", "Oxygen"], c: 2 },
+  { q: "Anong hayop ang tinatawag na man's best friend?", a: ["Pusa", "Aso", "Kabayo", "Ibon"], c: 1 },
+  { q: "What is the square root of 64?", a: ["6", "8", "7", "9"], c: 1 },
+  { q: "Sinong bayani ang kilala sa Cry of Balintawak?", a: ["Rizal", "Bonifacio", "Lapu-Lapu", "Mabini"], c: 1 },
+  { q: "What device shows direction?", a: ["Thermometer", "Clock", "Compass", "GPS"], c: 2 },
+  { q: "Anong bahagi ng katawan ang ginagamit sa pandinig?", a: ["Ilong", "Tenga", "Mata", "Bibig"], c: 1 },
+  { q: "How many months in a year?", a: ["10", "11", "12", "13"], c: 2 }
+];
+
+let shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+let current = 0;
+let score = 0;
+let coins = parseInt(localStorage.getItem("quizCoins")) || 0;
+
+const qBox = document.getElementById("question");
+const aBox = document.getElementById("answers");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion() {
+  let q = shuffled[current];
+  qBox.textContent = q.q;
+  aBox.innerHTML = "";
+  q.a.forEach((choice, i) => {
+    let btn = document.createElement("button");
+    btn.textContent = choice;
+    btn.onclick = () => selectAnswer(i);
+    aBox.appendChild(btn);
+  });
+  nextBtn.disabled = true;
+}
+
+function selectAnswer(i) {
+  let correct = shuffled[current].c;
+  let buttons = aBox.getElementsByTagName("button");
+  for (let b = 0; b < buttons.length; b++) {
+    buttons[b].disabled = true;
+    if (b === correct) buttons[b].style.backgroundColor = "#28a745";
+    else if (b === i) buttons[b].style.backgroundColor = "#dc3545";
+  }
+  if (i === correct) score++;
+  nextBtn.disabled = false;
+}
+
+nextBtn.onclick = () => {
+  current++;
+  if (current < shuffled.length) {
+    loadQuestion();
+  } else {
+    finishQuiz();
+  }
+};
+
+function finishQuiz() {
+  document.getElementById("quiz-box").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("score").textContent = score + "/" + shuffled.length;
+
+  let bonus = 0;
+  if (score === shuffled.length) {
+    bonus = 10;
+    document.getElementById("bonus").textContent = "🎁 Perfect! +10 bonus coins!";
+  } else {
+    document.getElementById("bonus").textContent = "";
+  }
+
+  coins += score + bonus;
+  document.getElementById("coins").textContent = coins;
+  localStorage.setItem("quizCoins", coins);
+}
+
+function restartQuiz() {
+  current = 0;
+  score = 0;
+  shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+  document.getElementById("quiz-box").style.display = "block";
+  document.getElementById("result").style.display = "none";
+  loadQuestion();
+}
+
+loadQuestion();
